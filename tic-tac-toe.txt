@@ -12,13 +12,15 @@ Development
 
 - State Management;
   - As the tutorial stated, rather than letting the square handle its state, the board will manage state for all 9 squares
-  - The board tracks state through an array of 9 values, which are set to null by default
+  - The board tracks the squares' contents through an array of 9 values, which are set to null by default
+  - It also knows what turn to take ("X" or "O") through a boolean state value: isXNext
   - Each square has two props passed down: its value, as well as a function that is triggered by the onClick event handler
     - The value is whatever corresponding value the square has in the array
-    - The prop "handleClick" function is defined within the board function, with its functionality defined below:
-      - Takes in parameter of the array index
-      - Creates a copy of the squares array
-      - Sets the value of the square at that index to "X"
-      - Sets state with the new array
+    - The prop "handleClick" function that gets passed down is defined within the board, with its functionality defined below:
+      - Takes in one parameter: the array index, i
+      - If squares[i] already has a value, do nothing
+      - Otherwise, create a copy of the squares array
+      - Sets the value of the square at that index to either "X" or "O" based on the turn
+      - Re-render with changed values
        
 

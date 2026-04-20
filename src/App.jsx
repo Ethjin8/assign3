@@ -16,8 +16,10 @@ export default function Board() {
     if (squares[i]) {
       return;
     }
-    
+
     const nextSquares = squares.slice(); // Creates copy of the squares array
+    
+    // Decide turn based on condition
     if (xIsNext) {
       nextSquares[i] = "X";
     }
