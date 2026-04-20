@@ -1,0 +1,24 @@
+Setup
+- Ran "git clone https://github.com/Ethjin8/assign3.git" in terminal, cloning the forked assignment repository onto my local device.
+
+
+Development
+- I followed the React tutorial at this link: https://react.dev/learn/tutorial-tic-tac-toe
+
+- Scaffolding:
+  - The first overarching step was to set up the foundation of my app
+  - I first defined the board structure, setting up each row into separate divs, with each div containing three squares
+  - Then, I defined my Square functional component, which returned a button that uses styling outlined for the "square" class in styles.css
+
+- State Management;
+  - As the tutorial stated, rather than letting the square handle its state, the board will manage state for all 9 squares
+  - The board tracks state through an array of 9 values, which are set to null by default
+  - Each square has two props passed down: its value, as well as a function that is triggered by the onClick event handler
+    - The value is whatever corresponding value the square has in the array
+    - The prop "handleClick" function is defined within the board function, with its functionality defined below:
+      - Takes in parameter of the array index
+      - Creates a copy of the squares array
+      - Sets the value of the square at that index to "X"
+      - Sets state with the new array
+       
+
