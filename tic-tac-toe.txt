@@ -6,7 +6,9 @@ Development
 - I followed the React tutorial at this link: https://react.dev/learn/tutorial-tic-tac-toe
 
 - Scaffolding:
-  - The first overarching step was to set up the foundation of my app
+  - Install node.js
+  - Use "npm install" command to install all necessary pakcages
+  - The first coding step was to set up the foundation of my app
   - I first defined the main Board function. Each row was split into separate divs, and each div contained three squares
   - Then, I defined my Square functional component, which returned a button that uses styling outlined for the "square" class in styles.css
 
@@ -31,4 +33,3 @@ Development
   - Then, determine the status: if there is a winner, set the status to "Winner: (X or O)". If there is no winner yet, set the status to "Next player: (X or O)"
   - Render the status above the entire board 
        
-
