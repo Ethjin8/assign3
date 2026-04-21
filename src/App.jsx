@@ -31,7 +31,7 @@ export default function Board() {
       return;
     }
 
-    if (selected != -1 && !nextSquares[i]) {
+    if (selected != -1 && !nextSquares[i] && validMove(selected, i)) {
       swap(nextSquares, i);
       setXIsNext(!xIsNext);
     }
@@ -111,9 +111,15 @@ export default function Board() {
 }
 
 // Helper functions
-// function validMove(squares) {
+function validMove(from, to) {
+  const rowFrom = Math.floor(from / 3);
+  const colFrom = from % 3;
+  
+  const rowTo = Math.floor(to / 3);
+  const colTo = to % 3;
 
-// }
+  return (Math.abs(rowTo - rowFrom) <= 1 && Math.abs(colTo - colFrom) <= 1);
+}
 
 function calculateWinner(squares) {
   const lines = [
