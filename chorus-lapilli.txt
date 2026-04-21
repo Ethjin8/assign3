@@ -1,0 +1,49 @@
+Setup
+- Ran "git clone https://github.com/Ethjin8/assign3.git" in terminal, cloning the forked assignment repository onto my local device.
+
+
+Development
+- This game's overall structure was based on React's tic-tac-toe tutorial: https://react.dev/learn/tutorial-tic-tac-toe
+- However, the functionality was modified for the Chorus Lapilli game
+
+- Scaffolding:
+  - Installed node.js
+  - Used the "npm install" command to install all necessary packages
+  - I then set up the app's foundation:
+    - I first defined the main Board function. Each row was split into separate divs, and each div contained three squares
+    - Then, I defined my Square functional component, which returned a button that uses styling outlined for the "square" class in styles.css
+
+- State Management:
+  - As the tutorial stated, rather than letting the Square handle its state, I had the Board manage state for all 9 Squares
+  - The Board tracked the Squares' contents through an array of 9 values, which were set to null by default
+  - It also tracked what turn to take ("X" or "O") through a boolean state value: isXNext
+  - Each Square had two props passed down: its value, as well as a function triggered by the onClick event handler
+    - The value prop was whatever corresponding value the Board's array had
+    - The "handleClick" function prop was defined in the Board, with its functionality outlined in the "Game Logic" section below
+
+- Game Logic:
+  - I defined a single "turn" as when BOTH the "X" and "O" player had done something, tracked through a state variable, moves
+  - There were two overarching states to track: either the players had made <= 3 turns, or they had made more
+  - If the players had not yet made three turns, the logic was the same as regular tic-tac-toe:
+    - If squares[i] already had a value, did nothing
+    - Otherwise, created a copy of the array of Squares, set the value at that index to either "X" or "O" based on the turn, and re-rendered
+  - If the players had made more than three turns, the logic shifted:
+    - I added a state variable, selected, that tracked the Board index of the element the user wanted to move, defaulting to -1 (no valid index)
+    - I defined three helper functions: swap, validMove, and move:
+      1. swap took in nextSquares and i (the most recently clicked index), swapped their values using a temp variable, and reset selected to -1
+      2. validMove took in the from and to indices, converted them to 2-D row/column coordinates (row = Math.floor(i/3), col = i % 3), and checked whether the absolute differences of both were <= 1 (indicating adjacency)
+      3. move took in nextSquares, turn, selected, and i, and handled four cases:
+        - If the middle square held the current player's letter, no element was selected, and the user did not click the middle, returned early — forcing that player to move their piece off the center
+        - If an element was selected, the target was empty, and the move was valid, swapped and passed the turn
+        - If the user clicked the already-selected element, deselected it (reset selected to -1)
+        - Otherwise, if the clicked square held the current player's letter, selected it (preventing X from selecting O, and vice versa)
+    - If the number of moves was greater than 3, I called the move helper function with the appropriate parameters
+  - At the end of handleClick, I re-rendered the board by calling setSquares
+
+
+- Determining Winners:
+  - I defined a function, calculateWinner, that took in the squares array and matched it with all possible winning combinations
+  - If there was a winning combination, it returned the letter there (either "X" or "O"); otherwise, it returned null
+  - I also wanted nothing to happen if there was a winner, so I added that check alongside the existing one in handleClick with an "or" conditional
+  - Then, I determined the status: if there was a winner, I set it to "Winner: (X or O)"; if not, I set it to "Next player: (X or O)"
+  - I rendered the status as text above the board
