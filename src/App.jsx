@@ -11,26 +11,74 @@ function Square({ value, onSquareClick }) {
 
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
+  const [moves, setMoves] = useState(0);
   const [squares, setSquares] = useState(Array(9).fill(null));
+  const [selected, setSelected] = useState(-1);
 
-  function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
+  function place(nextSquares, val, i) {
+    nextSquares[i] = val;
+  }
+
+  function swap(nextSquares, i) {
+    let temp = nextSquares[i];
+    nextSquares[i] = nextSquares[selected];
+    nextSquares[selected] = temp;
+    setSelected(-1);
+  }
+
+  function move(nextSquares, turn, selected, i) {
+    if (nextSquares[4] == turn && selected == -1 && i != 4) {
       return;
     }
 
-    const nextSquares = squares.slice(); // Creates copy of the squares array
-    
-    // Decide turn based on condition
-    if (xIsNext) {
-      nextSquares[i] = "X";
+    if (selected != -1 && !nextSquares[i]) {
+      swap(nextSquares, i);
+      setXIsNext(!xIsNext);
+    }
+    else if (i == selected) {
+      setSelected(-1);
     }
     else {
-      nextSquares[i] = "O";
+      if (nextSquares[i] == turn) {
+        setSelected(i);
+      }
+      return;
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
   }
 
+  function handleClick(i) {
+    if (calculateWinner(squares)) {
+      return;
+    }
+
+    const nextSquares = squares.slice();
+
+    if (xIsNext) {
+      if (moves < 3) {
+        if (nextSquares[i]) return;
+        place(nextSquares, "X", i);
+        setXIsNext(!xIsNext);
+      }
+      else {
+        move(nextSquares, "X", selected, i);
+      }
+    }
+    else {
+      if (moves < 3) {
+        if (nextSquares[i]) return;
+        place(nextSquares, "O", i);
+        setMoves(moves + 1);
+        setXIsNext(!xIsNext);
+      }
+      else {
+        move(nextSquares, "O", selected, i);
+      }
+    }
+
+    setSquares(nextSquares);
+  }
+
+  // Check for winner, set status
   const winner = calculateWinner(squares);
   let status;
   if (winner) {
@@ -53,15 +101,19 @@ export default function Board() {
         <Square value={squares[4]} onSquareClick={() => handleClick(4)}/>
         <Square value={squares[5]} onSquareClick={() => handleClick(5)}/>
       </div>
-      <div className="boardrow">
+      <div className="board-row">
         <Square value={squares[6]} onSquareClick={() => handleClick(6)}/>
         <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
         <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
       </div>
-    </>
+</>
   );
 }
 
+// Helper functions
+// function validMove(squares) {
+
+// }
 
 function calculateWinner(squares) {
   const lines = [
