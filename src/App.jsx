@@ -15,10 +15,6 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [selected, setSelected] = useState(-1);
 
-  function place(nextSquares, val, i) {
-    nextSquares[i] = val;
-  }
-
   function swap(nextSquares, i) {
     let temp = nextSquares[i];
     nextSquares[i] = nextSquares[selected];
@@ -56,7 +52,7 @@ export default function Board() {
     if (xIsNext) {
       if (moves < 3) {
         if (nextSquares[i]) return;
-        place(nextSquares, "X", i);
+        nextSquares[i] = "X";
         setXIsNext(!xIsNext);
       }
       else {
@@ -66,7 +62,7 @@ export default function Board() {
     else {
       if (moves < 3) {
         if (nextSquares[i]) return;
-        place(nextSquares, "O", i);
+        nextSquares[i] = "O";
         setMoves(moves + 1);
         setXIsNext(!xIsNext);
       }
