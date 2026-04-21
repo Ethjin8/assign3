@@ -6,30 +6,29 @@ Development
 - I followed the React tutorial at this link: https://react.dev/learn/tutorial-tic-tac-toe
 
 - Scaffolding:
-  - Install node.js
-  - Use "npm install" command to install all necessary pakcages
+  - Installed node.js
+  - Used the "npm install" command to install all necessary packages
   - The first coding step was to set up the foundation of my app
   - I first defined the main Board function. Each row was split into separate divs, and each div contained three squares
   - Then, I defined my Square functional component, which returned a button that uses styling outlined for the "square" class in styles.css
 
-- State Management;
-  - As the tutorial stated, rather than letting the Square handle its state, the Board will manage state for all 9 Squares
-  - The Board tracks the Squares' contents through an array of 9 values, which are set to null by default
-  - It also knows what turn to take ("X" or "O") through a boolean state value: isXNext
-  - Each Square has two props passed down: its value, as well as a function that is triggered by the onClick event handler
-    - The value is whatever corresponding value the Board's array has
-    - The prop "handleClick" function that gets passed down is defined in the Board, with its functionality outlined below:
-      - Takes in one parameter: the array index, i
-      - If squares[i] already has a value, do nothing
-      - Otherwise, create a copy of the array of Squares
-      - Sets the value of the square at that index to either "X" or "O" based on the turn
-      - Re-render with changed values
+- State Management:
+  - As the tutorial stated, rather than letting the Square handle its state, I had the Board manage state for all 9 Squares
+  - The Board tracked the Squares' contents through an array of 9 values, which were set to null by default
+  - It also tracked what turn to take ("X" or "O") through a boolean state value: isXNext
+  - Each Square had two props passed down: its value, as well as a function that was triggered by the onClick event handler
+    - The value was whatever corresponding value the Board's array had
+    - The "handleClick" function prop that was passed down was defined in the Board, with its functionality outlined below:
+      - Took in one parameter: the array index, i
+      - If squares[i] already had a value, did nothing
+      - Otherwise, created a copy of the array of Squares
+      - Set the value of the square at that index to either "X" or "O" based on the turn
+      - Re-rendered with changed values
 
 - Determining Winners:
-  - Define a function, calculateWinners, that takes in the squares array and matches it with all possible winning combinations
-  - If there is a winning combination, return the letter that was there (either "X" or "O")
-  - Otherwise, return null
-  - Before, we wanted nothing to happen if squares[i] already had a value. We also want nothing to happen if there is a winner, so add that in with an "or" conditional
-  - Then, determine the status: if there is a winner, set the status to "Winner: (X or O)". If there is no winner yet, set the status to "Next player: (X or O)"
-  - Render the status above the entire board 
-       
+  - I defined a function, calculateWinners, that took in the squares array and matched it with all possible winning combinations
+  - If there was a winning combination, it returned the letter that was there (either "X" or "O")
+  - Otherwise, it returned null
+  - Before, I wanted nothing to happen if squares[i] already had a value. I also wanted nothing to happen if there was a winner, so I added that in with an "or" conditional
+  - Then, I determined the status: if there was a winner, I set the status to "Winner: (X or O)". If there was no winner yet, I set the status to "Next player: (X or O)"
+  - I rendered the status above the entire board
