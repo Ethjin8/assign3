@@ -23,11 +23,13 @@ export default function Board() {
   }
 
   function move(nextSquares, turn, selected, i) {
-    if (nextSquares[4] == turn && selected == -1 && i != 4) {
-      return;
-    }
-
     if (selected != -1 && !nextSquares[i] && validMove(selected, i)) {
+      if (nextSquares[4] == turn && selected != 4) {
+        const simulated = nextSquares.slice();
+        simulated[i] = simulated[selected];
+        simulated[selected] = null;
+        if (calculateWinner(simulated) != turn) return;
+      }
       swap(nextSquares, i);
       setXIsNext(!xIsNext);
     }

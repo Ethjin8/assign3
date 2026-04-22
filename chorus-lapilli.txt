@@ -32,9 +32,10 @@ Development
     - I defined three helper functions: swap, validMove, and move:
       1. swap took in nextSquares and i (the most recently clicked index), swapped their values using a temp variable, and reset selected to -1
       2. validMove took in the from and to indices, converted them to 2-D row/column coordinates (row = Math.floor(i/3), col = i % 3), and checked whether the absolute differences of both were <= 1 (indicating adjacency)
-      3. move took in nextSquares, turn, selected, and i, and handled four cases:
-        - If the middle square held the current player's letter, no element was selected, and the user did not click the middle, returned early — forcing that player to move their piece off the center
-        - If an element was selected, the target was empty, and the move was valid, swapped and passed the turn
+      3. move took in nextSquares, turn, selected, and i, and handled three cases:
+        - If an element was selected, the target was empty, and the move was valid, then we split into two subcases:
+          - First, we check if the player had an element in the middle and the they did NOT select it. Then, we must simulate the player's action to see if it won them the game. If it did not, then reject their move by returning immediately
+          - Otherwise, the player either won or they moved the middle element. Either way, we swap the entries and go to the next turn
         - If the user clicked the already-selected element, deselected it (reset selected to -1)
         - Otherwise, if the clicked square held the current player's letter, selected it (preventing X from selecting O, and vice versa)
     - If the number of moves was greater than 3, I called the move helper function with the appropriate parameters
