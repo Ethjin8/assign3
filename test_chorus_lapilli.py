@@ -154,6 +154,83 @@ class TestChorusLapilli(unittest.TestCase):
         self.assertTileIs(tiles[0], self.SYMBOL_BLANK)
         tiles[0].click()
         self.assertTileIs(tiles[0], self.SYMBOL_X)
+    
+    def test_additional_moves(self):
+        '''Check if the app prevents additional moves once the player wins'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        tiles[0].click() # 'X' click
+        tiles[1].click() # 'O' click
+        tiles[4].click() # 'X' click
+        tiles[2].click() # 'O' click
+        tiles[8].click() # 'X' click
+
+        tiles[3].click() # 'O' click should fail, since game is over
+        self.assertTileIs(tiles[3], self.SYMBOL_BLANK)
+
+    def test_state_transition(self):
+        '''Check if the players can no longer place elements once 3 X's and 3 O's exist'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+
+        # Fill out first two rows with alternating Xs and Os
+        tiles[0].click()
+        tiles[1].click()
+        tiles[2].click()
+        tiles[3].click()
+        tiles[4].click()
+        tiles[5].click()
+
+        # None of these clicks should register
+        tiles[6].click()
+        tiles[7].click()
+        tiles[8].click()
+
+        self.assertTileIs(tiles[6], self.SYMBOL_BLANK)
+        self.assertTileIs(tiles[7], self.SYMBOL_BLANK)
+        self.assertTileIs(tiles[8], self.SYMBOL_BLANK)
+
+    def test_move_logic(self):
+        '''Check if the user can only move to adjacent squares'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        tiles[0].click()
+        tiles[1].click()
+        tiles[2].click()
+        tiles[3].click()
+        tiles[4].click()
+        tiles[5].click()
+
+        # Moving 'X' in 1st row, 1st column to 3rd row, 1st column shouldn't do anything
+        tiles[0].click()
+        tiles[6].click()
+        self.assertTileIs(tiles[6], self.SYMBOL_BLANK)
+
+        # Moving middle 'X' to 3rd row, 2nd column should be successful
+        tiles[4].click()
+        tiles[7].click()
+        self.assertTileIs(tiles[7], self.SYMBOL_X)
+    
+    def test_middle_logic(self):
+        '''Check if the user is forbidden from moving any non-middle piece if they have something in the middle, unless that move causes them to win'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        tiles[8].click()
+        tiles[7].click()
+        tiles[6].click()
+        tiles[5].click()
+        tiles[3].click()
+        tiles[4].click() # There is an 'O' in the middle
+
+        # Move 'X' in 2nd row, 1st column to 1st row, 1st column (do this so we can get to 'O' player turn)
+        tiles[3].click()
+        tiles[0].click()
+
+        # Moving 'O' in the 2nd row, 3rd column to 1st row, 3rd column shouldn't do anything b/c it is not a winning move
+        tiles[5].click()
+        tiles[2].click()
+        self.assertTileIs(tiles[2], self.SYMBOL_BLANK)
+
+        # Moving 'O' into 1st row, 2nd column should work, b/c it is a winning move
+        tiles[1].click()
+        self.assertTileIs(tiles[1], self.SYMBOL_O)
+
 
 
 # ================= [DO NOT MAKE ANY CHANGES BELOW THIS LINE] =================
