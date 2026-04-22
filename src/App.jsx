@@ -14,6 +14,7 @@ export default function Board() {
   const [moves, setMoves] = useState(0);
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [selected, setSelected] = useState(-1);
+  const [error, setError] = useState(null);
 
   function swap(nextSquares, i) {
     let temp = nextSquares[i];
@@ -23,13 +24,21 @@ export default function Board() {
   }
 
   function move(nextSquares, turn, selected, i) {
-    if (selected != -1 && !nextSquares[i] && validMove(selected, i)) {
+    if (selected != -1 && !nextSquares[i]) {
+      if (!validMove(selected, i)) {
+        setError("Error: That is an invalid move");
+        return;
+      }
       if (nextSquares[4] == turn && selected != 4) {
         const simulated = nextSquares.slice();
         simulated[i] = simulated[selected];
         simulated[selected] = null;
-        if (calculateWinner(simulated) != turn) return;
+        if (calculateWinner(simulated) != turn) {
+          setError("Error: There is a '" + turn + "' in the middle. You must either adjust it or make a winning move");
+          return;
+        }
       }
+      setError(null);
       swap(nextSquares, i);
       setXIsNext(!xIsNext);
     }
@@ -38,7 +47,11 @@ export default function Board() {
     }
     else {
       if (nextSquares[i] == turn) {
+        setError(null);
         setSelected(i);
+      }
+      else {
+        setError("Error: You must select one of your own pieces to move");
       }
       return;
     }
@@ -72,7 +85,7 @@ export default function Board() {
         move(nextSquares, "O", selected, i);
       }
     }
-
+    
     setSquares(nextSquares);
   }
 
@@ -104,6 +117,7 @@ export default function Board() {
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} isSelected={selected === 7}/>
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} isSelected={selected === 8}/>
       </div>
+      <div className="error">{error}</div>
 </>
   );
 }

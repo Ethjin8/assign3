@@ -97,6 +97,9 @@ ul {
   display: flex;
   flex-direction: row;
 }
+.error {
+  margin-top: 10px;
+}
 
 .game-info {
   margin-left: 20px;
