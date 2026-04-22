@@ -16,29 +16,34 @@ Development
 - State Management:
   - As the tutorial stated, rather than letting the Square handle its state, I had the Board manage state for all 9 Squares
   - The Board tracked the Squares' contents through an array of 9 values, which were set to null by default
-  - It also tracked what turn to take ("X" or "O") through a boolean state value: isXNext
+  - It also tracked what turn to take ("X" or "O") through a boolean state value: xIsNext
   - Each Square had two props passed down: its value, as well as a function triggered by the onClick event handler
     - The value prop was whatever corresponding value the Board's array had
     - The "handleClick" function prop was defined in the Board, with its functionality outlined in the "Game Logic" section below
 
 - Game Logic:
-  - I defined a single "turn" as when BOTH the "X" and "O" player had done something, tracked through a state variable, moves
-  - There were two overarching states to track: either the players had made <= 3 turns, or they had made more
+  - I defined a single "turn" as when BOTH the "X" and "O" player had done something, tracked through a state variable, "moves" (incremented only after O places a piece, so its value equals the number of completed full turns)
+  - There were two overarching states to track: either the players had made fewer than 3 turns each, or they had each made 3
   - If the players had not yet made three turns, the logic was the same as regular tic-tac-toe:
     - If squares[i] already had a value, did nothing
     - Otherwise, created a copy of the array of Squares, set the value at that index to either "X" or "O" based on the turn, and re-rendered
-  - If the players had made more than three turns, the logic shifted:
-    - I added a state variable, selected, that tracked the Board index of the element the user wanted to move, defaulting to -1 (no valid index)
+
+  - Once the players had each made three turns (moves >= 3), the logic shifted:
+    - I added a state variable, "selected", that tracked the Board index of the element the user wanted to move, defaulting to -1 (no valid index)
+    - I added another state variable, "error", that displayed an error message on impossible moves
+
     - I defined three helper functions: swap, validMove, and move:
       1. swap took in nextSquares and i (the most recently clicked index), swapped their values using a temp variable, and reset selected to -1
       2. validMove took in the from and to indices, converted them to 2-D row/column coordinates (row = Math.floor(i/3), col = i % 3), and checked whether the absolute differences of both were <= 1 (indicating adjacency)
       3. move took in nextSquares, turn, selected, and i, and handled three cases:
-        - If an element was selected, the target was empty, and the move was valid, then we split into two subcases:
-          - First, we check if the player had an element in the middle and the they did NOT select it. Then, we must simulate the player's action to see if it won them the game. If it did not, then reject their move by returning immediately
-          - Otherwise, the player either won or they moved the middle element. Either way, we swap the entries and go to the next turn
+        - If an element was already selected and the target square was empty, we ran two validation checks before committing the move:
+          - First, if the move was not valid (target square was not adjacent), then display an error message and return
+          - Then, we check if the player had an element in the middle and they did NOT select it. In that case, we must simulate the player's action to see if it won them the game. If it did not, display an error message, then reject their move by returning immediately
+          - Otherwise, the player either won or they moved the middle element. Either way, we swap the entries (via swap) and toggle xIsNext to go to the next turn
         - If the user clicked the already-selected element, deselected it (reset selected to -1)
-        - Otherwise, if the clicked square held the current player's letter, selected it (preventing X from selecting O, and vice versa)
-    - If the number of moves was greater than 3, I called the move helper function with the appropriate parameters
+        - Otherwise, if the clicked square held the current player's letter, selected it (preventing X from selecting O, and vice versa); if the clicked square held the opponent's letter, an error message was shown instead
+        - On successful operations, the error message was set to null, disappearing off the screen
+    - To give the user visual feedback on which piece was currently selected, I passed an isSelected prop into each Square (true when selected === that square's index). The Square component then conditionally applies the "square-selected" CSS class instead of the default "square" class
   - At the end of handleClick, I re-rendered the board by calling setSquares
 
 
@@ -48,3 +53,4 @@ Development
   - I also wanted nothing to happen if there was a winner, so I added that check alongside the existing one in handleClick with an "or" conditional
   - Then, I determined the status: if there was a winner, I set it to "Winner: (X or O)"; if not, I set it to "Next player: (X or O)"
   - I rendered the status as text above the board
+
